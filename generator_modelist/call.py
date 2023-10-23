@@ -1,15 +1,3 @@
-# 1. Предложение основное:
-#     • - id предложения
-#     • - id клиента
-#     • - дата начала действия предложения
-#     • - дата окончания действия предложения
-#     • - актуальный статус предложения
-#     • - продукт
-#     • - код кампании
-#     • - сегмент
-#     • - дата изменения записи
-#     • - комментарий
-
 from fake_data_generator import generate_table_from_profile, \
     Column, MultipleColumns, ContinuousColumn, StringFromRegexColumn, CategoricalColumn, IncrementalIDColumn, ForeignKeyColumn
 from sqlalchemy import create_engine

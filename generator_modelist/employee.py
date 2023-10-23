@@ -30,10 +30,7 @@ def get_generator_multiple_columns(conn, table_name, incremental_id_column_name)
     start = 1262293200 # 2010-01-01 00:00:00
     end = 1577826000 # 2020-01-01 00:00:00
 
-    if isinstance(conn, sqlalchemy.engine.base.Engine):
-        current_max_id_df = pd.read_sql_query(f'SELECT MAX({incremental_id_column_name}) AS id FROM {table_name}', conn)
-    else:
-        current_max_id_df = pd.DataFrame({'id': [None]})
+    current_max_id_df = pd.read_sql_query(f'SELECT MAX({incremental_id_column_name}) AS id FROM {table_name}', conn)
     current_id = current_max_id_df['id'][0] + 1 if current_max_id_df['id'][0] is not None else 1
 
     while True:
@@ -43,20 +40,13 @@ def get_generator_multiple_columns(conn, table_name, incremental_id_column_name)
             random_number = min(random.choice([1, 2, 3, 4]), number_of_left_rows)
             number_of_left_rows = number_of_left_rows - random_number
             dttm = random.randint(start, end)
-            # second_date = first_date + random.randint(0, 1577826000 - 1262293200)
             for _ in range(random_number):
                 dttm_and_id.append([datetime.fromtimestamp(dttm), current_id])
                 dttm += random.randint(0, 31553280)
             current_id += 1
         output_size = yield DataFrame(dttm_and_id)
 
-# gen = get_generator_multiple_columns(engine, 'generator_modelist.test_table1', 'id')
-#
-# print((1577826000 - 1262293200) / 10)
-# next(gen)
-# print(gen.send(10))
-# print('-------------------')
-# print(gen.send(20))
+
 dttm_and_id_columns = MultipleColumns(
     columns=[
         Column(column_name='dttm', data_type='timestamp'),
